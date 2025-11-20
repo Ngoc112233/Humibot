@@ -6,6 +6,7 @@ import streamlit as st
 from pathlib import Path
 import sys
 import warnings
+import os
 
 # Suppress warnings
 warnings.filterwarnings('ignore')
@@ -15,6 +16,37 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from src.chatbot import StudentSupportChatbot
 from src.utils import load_config
+
+
+def download_vectorstore_from_gdrive():
+    """
+    Download vectorstore từ Google Drive nếu chưa có
+    """
+    vectorstore_path = Path("data/vectorstore")
+    
+    # Kiểm tra xem vectorstore đã tồn tại chưa
+    if vectorstore_path.exists() and (vectorstore_path / "chroma.sqlite3").exists():
+        return True
+    
+    try:
+        import gdown
+        
+        # Google Drive folder ID
+        folder_id = "1REknqUntHK8gxy_lO6zwyrEjDqEThAo0"
+        
+        # Tạo thư mục nếu chưa có
+        vectorstore_path.mkdir(parents=True, exist_ok=True)
+        
+        # Download folder từ Google Drive
+        url = f"https://drive.google.com/drive/folders/{folder_id}"
+        
+        with st.spinner("🔄 Đang tải vector database... (chỉ lần đầu, ~2-3 phút)"):
+            gdown.download_folder(url, output=str(vectorstore_path), quiet=False, use_cookies=False)
+        
+        return True
+    except Exception as e:
+        st.error(f"❌ Lỗi khi tải vectorstore: {str(e)}")
+        return False
 
 
 # Page configuration
@@ -182,6 +214,11 @@ def load_chatbot():
     Load chatbot (cached để không phải reload mỗi lần)
     """
     try:
+        # Download vectorstore nếu chưa có
+        if not download_vectorstore_from_gdrive():
+            st.error("❌ Không thể tải vector database")
+            return None
+        
         import warnings
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
@@ -193,7 +230,7 @@ def load_chatbot():
             st.info("""
             **Các bước kiểm tra:**
             1. File .env đã có API keys chưa?
-            2. Đã chạy `python scripts/process_documents.py`?
+            2. Vector database có tải được không?
             3. Đã cài đặt dependencies?
             """)
         return None
