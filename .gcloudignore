@@ -1,0 +1,64 @@
+# Git files
+.git/
+.gitignore
+.github/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# Development
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.*
+
+# Logs
+logs/
+*.log
+
+# Cache and temp
+*.pyc
+.pytest_cache/
+.mypy_cache/
+
+# Documentation (không cần trên production)
+METHODOLOGY.md
+QUICKSTART.md
+DEPLOYMENT.md
+DEPLOY_FREE.md
+DEPLOY_STEPS.md
+README.md
+examples/
+
+# Tests
+tests/
+*.pytest_cache
+
+# Development scripts
+scripts/setup_server.sh
+scripts/deploy.sh
+scripts/check_prerequisites.sh
+
+# Docker files (không cần cho Cloud Run)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Nginx config (không cần cho Cloud Run)
+nginx/
+
+# Systemd (không cần cho Cloud Run)
+systemd/
+

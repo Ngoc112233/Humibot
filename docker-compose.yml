@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  chatbot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: humibot
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    volumes:
+      # Persist vector database
+      - ./data/vectorstore:/app/data/vectorstore:rw
+      # Persist documents
+      - ./data/documents:/app/data/documents:ro
+      # Persist logs
+      - ./logs:/app/logs:rw
+    env_file:
+      - .env
+    environment:
+      - STREAMLIT_SERVER_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      - STREAMLIT_SERVER_HEADLESS=true
+      - STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - humibot-network
+
+networks:
+  humibot-network:
+    driver: bridge
+

@@ -1,0 +1,76 @@
+# Cấu hình hệ thống Chatbot
+
+# Document Processing
+document_processing:
+  supported_formats:
+    - pdf
+    - docx
+    - txt
+    - md
+  chunk_size: 1000
+  chunk_overlap: 200
+  separators:
+    - "\n\n"
+    - "\n"
+    - " "
+    - ""
+
+# Embedding Configuration
+embedding:
+  provider: "sentence-transformers"  # openai, sentence-transformers, huggingface
+  model_name: "keepitreal/vietnamese-sbert"  # Model hỗ trợ tiếng Việt tốt
+  batch_size: 32
+  
+  # Alternative models:
+  # - "all-MiniLM-L6-v2" (English, nhẹ)
+  # - "intfloat/multilingual-e5-base" (Multilingual)
+  # - "text-embedding-ada-002" (OpenAI, trả phí)
+
+# Vector Database
+vectorstore:
+  type: "chromadb"  # chromadb, faiss
+  persist_directory: "./data/vectorstore"
+  collection_name: "student_support_docs"
+  distance_metric: "cosine"
+
+# LLM Configuration
+llm:
+  provider: "gemini"  # openai, gemini, ollama, huggingface
+  model_name: "models/gemini-2.0-flash"  # models/gemini-2.0-flash (nhanh, miễn phí)
+  temperature: 0.7
+  max_tokens: 1500
+  top_p: 0.9
+  
+  # System prompt
+  system_prompt: |
+    Bạn là trợ lý ảo hỗ trợ sinh viên của trường đại học.
+    Nhiệm vụ của bạn là trả lời các câu hỏi của sinh viên dựa trên 
+    thông tin từ các văn bản, quy định của trường.
+    
+    Hãy trả lời một cách:
+    - Chính xác dựa trên thông tin được cung cấp
+    - Rõ ràng, dễ hiểu
+    - Thân thiện và lịch sự
+    - Nếu không có thông tin, hãy nói rõ là bạn không tìm thấy thông tin
+    
+    Luôn trích dẫn nguồn thông tin khi trả lời.
+
+# Retrieval Configuration
+retrieval:
+  top_k: 5  # Số lượng chunks liên quan nhất để retrieve
+  score_threshold: 0.5  # Ngưỡng similarity score tối thiểu
+  rerank: false  # Có sử dụng re-ranking không
+  
+# Response Configuration
+response:
+  language: "vi"  # vi hoặc en
+  include_sources: true  # Có hiển thị nguồn không
+  max_source_length: 200  # Độ dài tối đa của mỗi source snippet
+  stream: false  # Có stream response không (cho UI)
+
+# Logging
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  file: "./logs/chatbot.log"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+

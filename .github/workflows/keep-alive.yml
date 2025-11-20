@@ -1,0 +1,30 @@
+name: Keep HumiBot Alive
+
+on:
+  schedule:
+    # Chạy mỗi 30 phút để app không sleep
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+    # Cho phép chạy manual
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Ping HumiBot
+        run: |
+          echo "Pinging HumiBot to keep it alive..."
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://humibot.id.vn)
+          echo "Response code: $response"
+          
+          if [ $response -eq 200 ] || [ $response -eq 301 ] || [ $response -eq 302 ]; then
+            echo "✅ HumiBot is alive!"
+          else
+            echo "⚠️ HumiBot returned unexpected status code: $response"
+          fi
+      
+      - name: Log ping time
+        run: |
+          echo "Pinged at: $(date -u)"
+
