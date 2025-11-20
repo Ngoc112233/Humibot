@@ -11,8 +11,7 @@ try:
 except ImportError:
     from langchain.schema import Document
 
-from langchain.chains import RetrievalQA
-from langchain.prompts import PromptTemplate
+# Import LLM
 from langchain_openai import ChatOpenAI
 
 from src.embeddings import EmbeddingManager
