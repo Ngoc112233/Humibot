@@ -4,7 +4,11 @@ Quản lý retrieval logic cho RAG system
 """
 
 from typing import List, Dict, Any, Tuple
-from langchain.schema import Document
+
+try:
+    from langchain_core.documents import Document
+except ImportError:
+    from langchain.schema import Document
 
 
 class AdvancedRetriever:

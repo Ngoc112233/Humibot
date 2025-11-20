@@ -6,7 +6,11 @@ import os
 from typing import Dict, Any, List, Optional
 import google.generativeai as genai
 
-from langchain.schema import Document
+try:
+    from langchain_core.documents import Document
+except ImportError:
+    from langchain.schema import Document
+
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI

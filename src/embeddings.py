@@ -6,8 +6,15 @@ Quản lý các embedding models và vector database
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 
-from langchain.schema import Document
-from langchain.vectorstores import Chroma, FAISS
+try:
+    from langchain_core.documents import Document
+except ImportError:
+    from langchain.schema import Document
+
+try:
+    from langchain_community.vectorstores import Chroma, FAISS
+except ImportError:
+    from langchain.vectorstores import Chroma, FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_openai import OpenAIEmbeddings
 
